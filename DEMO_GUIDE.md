@@ -446,10 +446,13 @@ curl -s -X POST localhost:8090/hitl/$CP/respond -H 'content-type: application/js
 }
 ```
 This schema comes from Composio's live `tools/list` — real GitHub field names, not hardcoded in
-this repo. Supply values for a repository under the caller's control:
+this repo. `missing` only lists the tool's `required` fields (`owner`, `repo`, `title`); the same
+schema also declares optional fields (`body`, `labels`, `assignees`, `milestone`, ...), which are
+never flagged as missing but can be supplied the same way. Supply values for a repository under
+the caller's control, including the issue body:
 ```sh
 curl -s -X POST localhost:8090/hitl/$CP/respond -H 'content-type: application/json' -d \
-  '{"action":"input","fields":{"owner":"<your-github-username>","repo":"<a-repo-you-own-with-issues-enabled>","title":"Live HITL demo"}}' | jq
+  '{"action":"input","fields":{"owner":"<your-github-username>","repo":"<a-repo-you-own-with-issues-enabled>","title":"Live HITL demo","body":"Detailed description of the issue."}}' | jq
 ```
 
 ### Expected result (a real GitHub issue, created live)
