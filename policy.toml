@@ -1,0 +1,33 @@
+# Deterministic, config-driven tool permission policy — no LLM anywhere in
+# this file or in the code that reads it (src/policy.rs).
+#
+# Matching: glob (`*`, `?`) over "<connector>/<tool_name>", case-insensitive.
+# Priority when multiple rules match: block > ask > allow. A tool with no
+# matching rule defaults to "allow" — mirrors Nasiko's own default-allow
+# per-tool stance (permission-context is enable/disable at the connector
+# level, allow/ask/block at the tool level).
+
+[[rules]]
+connector = "github"
+pattern = "wipe_org"
+stance = "block"
+
+[[rules]]
+connector = "github"
+pattern = "delete_repo"
+stance = "ask"
+
+[[rules]]
+connector = "notion"
+pattern = "create_page"
+stance = "ask"
+
+# The live Composio demo (see .env.example / DEMO_GUIDE.md) registers one
+# real connector under this name. Its write action is ask-gated for the
+# same reason github/delete_repo and notion/create_page are: a real,
+# outward-visible side effect, not a read. If you point COMPOSIO_ALLOWED_TOOLS
+# at different tool slugs, update this pattern to match.
+[[rules]]
+connector = "composio_github"
+pattern = "GITHUB_CREATE_AN_ISSUE"
+stance = "ask"
